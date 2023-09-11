@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*:focus {
+    outline: none;
+}
+
+@layer components {
+    .gs-caption {
+        @apply mb-2 font-bold text-lg;
+    }
+    .gs-button {
+        @apply p-4 bg-white border rounded-xl;
+        &-primary {
+            @apply bg-blue-600 border-none text-white
+            shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-blue-200
+                hover:-translate-y-0.5
+            transition-all;
+        }
+    }
+    .gs-input {
+        @apply p-4 shadow-sm
+        bg-white rounded-lg border-2
+        hover:border-slate-400  active:border-blue-600  focus:border-blue-600
+            focus:shadow-lg focus:shadow-blue-100;
+        -webkit-appearance: none;
+        transition: box-shadow .2s, border-color .2s;
+    }
+    .gs-textarea {
+        min-height: 300px;
+    }
+    .gs-icon-wrapper {
+        margin-right: 10px;
+    }
+}
+
+@layer utilities {
+
+}
