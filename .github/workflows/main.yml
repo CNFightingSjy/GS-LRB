@@ -1,0 +1,42 @@
+name: AutoDeploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: 'main'
+      
+      - name: Use Specified Node Version
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7.26.2
+
+      - name: Install and Build
+        run: |
+          pnpm install
+          pnpm run build
+      
+      - name: Upload Bundles
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SVR_HOST }}
+          username: ${{ secrets.SVR_USER }}
+          password: ${{ secrets.SVR_PASS }}
+          source: "./dist/*"
+          target: /home/shijianyang/gs-matrix-textgen/
+      
+      - name: Run a one-line script
+        run: echo AUTO_DEPLOY_DONE
