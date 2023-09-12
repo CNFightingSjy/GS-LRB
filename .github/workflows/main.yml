@@ -32,9 +32,9 @@ jobs:
       - name: Upload Bundles
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.SVR_HOST }}
-          username: ${{ secrets.SVR_USER }}
-          password: ${{ secrets.SVR_PASS }}
+          host: ${{ secrets.DC_HOST }}
+          username: ${{ secrets.DC_USER }}
+          password: ${{ secrets.DC_PASS }}
           source: "./dist/*"
           target: /home/shijianyang/gs-matrix-textgen/
       
