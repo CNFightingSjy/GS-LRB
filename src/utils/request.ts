@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosResponse, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import { CGI_BASE_URL, CGI_DEFAULT_REQUEST_TIMEOUT  } from "@/api/config";
 
 const cgiRequestor: AxiosInstance = axios.create({
@@ -36,7 +36,7 @@ function handleSuccess(response: AxiosResponse) {
 }
 
 cgiRequestor.interceptors.request.use(
-    (config: AxiosRequestConfig) => {
+    (config: InternalAxiosRequestConfig) => {
         return config;
     },
     (error) => {
@@ -46,7 +46,7 @@ cgiRequestor.interceptors.request.use(
 
 cgiRequestor.interceptors.response.use(
     (response: AxiosResponse) => {
-        handleSuccess(response);
+        return handleSuccess(response);
     },
     (err) => {
         handleError(err);

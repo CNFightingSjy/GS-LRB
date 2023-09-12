@@ -34,7 +34,7 @@ const launchTextgenTask = () => {
         emotion: textgenStyles.value?.[chosenTextgenStyleIndex.value]?.label || '',
     }).then((res) => {
         console.log('gen result', res);
-        generateContent.value = res.data;
+        generateContent.value = res.data?.content_stream || '';
     });
 }
 </script>

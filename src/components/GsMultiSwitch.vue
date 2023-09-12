@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, PropType } from 'vue';
+import { ref } from 'vue';
 
 interface GsMultiSwitchItem {
     label: string;
@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<GsMultiSwitchProps>(), {
 
 // active item index
 const activeItemIdx = ref(props.defaultActiveIdx);
-const handleItemClick = (idx) => {
+const handleItemClick = (idx: number) => {
     activeItemIdx.value = idx;
     emit('change', idx);
 }
