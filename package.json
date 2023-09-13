@@ -9,7 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
+    "@vueuse/core": "^10.4.1",
     "axios": "^1.5.0",
+    "query-string": "^8.1.0",
+    "typed.js": "^2.0.16",
     "url": "^0.11.2",
     "vue": "^3.3.4"
   },

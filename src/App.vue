@@ -1,12 +1,18 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import Logo from '@assets/logo-with-text.jpg';
-import { fetchTextgen } from "@/api/textgen.ts";
+import { fetchTextgen, TextgenReponseStreamData } from "@/api/textgen.ts";
 import GsMultiSwitch from "@/components/GsMultiSwitch.vue";
+
+// @ts-ignore
+import Typed from 'typed.js';
+
 
 const title = ref('');
 const desc = ref('');
-const generateContent = ref(``);
+const generateContent = ref('');
+
+const typeWriterAnimInstance = ref(null);
 
 const chosenTextgenStyleIndex = ref(0);
 const handleSwitch = (idx: number) => {
@@ -25,16 +31,42 @@ const textgenStyles = ref([
         label: '差评',
         color: '#ef4444'
     },
-])
+]);
+
+// typewriter animation
+// @ts-ignore
+let typed = null;
+onMounted(() => {
+});
+onBeforeUnmount(() => {
+    typed = null;
+});
 
 const launchTextgenTask = () => {
     fetchTextgen({
-        title: title.value,
-        brief: desc.value,
+        title: title.value || '',
+        brief: desc.value || '',
         emotion: textgenStyles.value?.[chosenTextgenStyleIndex.value]?.label || '',
-    }).then((res) => {
-        console.log('gen result', res);
-        generateContent.value = res.data?.content_stream || '';
+    }, {
+        onOpen: () => {
+            console.log('open');
+        },
+        onError: (e) => {
+            console.log('error', e);
+        },
+        onClose: () => {
+            console.log('close');
+            typed = new Typed(typeWriterAnimInstance.value, {
+                strings: [generateContent.value],
+                typeSpeed: 100,
+                loop: false,
+            });
+        },
+        onMessage: (msg: TextgenReponseStreamData) => {
+            // @ts-ignore
+            const { id, event, contentStream } = msg;
+            generateContent.value += contentStream;
+        },
     });
 }
 </script>
@@ -44,11 +76,11 @@ const launchTextgenTask = () => {
     >
         <div class="root_left p-4">
             <div class="gs-caption">标题</div>
-            <input placeholder="请输入标题" class="gs-input mb-4" :value="title"/>
+            <input placeholder="请输入标题" class="gs-input mb-4" v-model="title"/>
             <div class="gs-caption">文案风格</div>
             <GsMultiSwitch class="mb-4" :items="textgenStyles" @change="handleSwitch"/>
             <div class="gs-caption">文案简介</div>
-            <textarea placeholder="请输入文案简介" class="gs-input mb-4 gs-textarea" :value="desc"/>
+            <textarea placeholder="请输入文案简介" class="gs-input mb-4 gs-textarea" v-model="desc"/>
             <button class="my-2 gs-button gs-button-primary"
             @click="launchTextgenTask"
             >一键生成</button>
@@ -57,8 +89,8 @@ const launchTextgenTask = () => {
             <div class="logo_head px-4 pt-4">
                 <img :src="Logo"/>
             </div>
-            <section class="generated_content p-8">
-                {{ generateContent }}
+            <section id="generated_content" class="generated_content p-8">
+                <span ref="typeWriterAnimInstance"></span>
             </section>
             <div class="action_bar">
                 <div class="action">
