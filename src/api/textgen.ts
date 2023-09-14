@@ -25,7 +25,7 @@ export function fetchTextgen({ title, brief, emotion, type, token }: TextgenDesc
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            // 'X-GsMatrix-Auth': token,
+            'X-GsMatrix-Auth': token,
         },
         body: JSON.stringify({ title, brief, emotion, type }),
         async onopen(response) {
