@@ -11,8 +11,10 @@ import Typed from 'typed.js';
 const title = ref('');
 const desc = ref('');
 const generateContent = ref('');
-
+const selectedOption = ref('')
 const typeWriterAnimInstance = ref(null);
+
+const code = ref('')
 
 const chosenTextgenStyleIndex = ref(0);
 const handleSwitch = (idx: number) => {
@@ -47,6 +49,8 @@ const launchTextgenTask = () => {
         title: title.value || '',
         brief: desc.value || '',
         emotion: textgenStyles.value?.[chosenTextgenStyleIndex.value]?.label || '',
+        type: selectedOption.value || '',
+        token: code.value || '',
     }, {
         onOpen: () => {
             console.log('open');
@@ -72,18 +76,36 @@ const launchTextgenTask = () => {
 </script>
 
 <template>
-    <div class="root"
-    >
+    <div class="root">
         <div class="root_left p-4">
+            <!-- TODO: 麻烦帮我fix一下样式！标题居中，括号内信息换行 谢谢~  -->
+            <div class="gs-caption">小文案助手(由GS-LLM驱动)</div>
+
             <div class="gs-caption">标题</div>
             <input placeholder="请输入标题" class="gs-input mb-4" v-model="title"/>
-            <div class="gs-caption">文案风格</div>
+            <div class="gs-caption">文案态度</div>
             <GsMultiSwitch class="mb-4" :items="textgenStyles" @change="handleSwitch"/>
-            <div class="gs-caption">文案简介</div>
+
+            <div class="gs-caption">文案类型</div>
+                <select class="gs-input mb-4" v-model="selectedOption">
+                    <option value="科普测评">科普测评</option>
+                    <option value="单品测评">单品测评</option>
+                    <option value="素人真实测评">素人真实测评</option>
+                    <option value="科普内容">科普内容</option>
+                    <option value="多品测评">多品测评</option>
+                    <option value="真实分享">真实分享</option>
+                    <option value="素人真实分享">素人真实分享</option>
+                </select>
+
+            <div class="gs-caption">产品简介(Brief)</div>
             <textarea placeholder="请输入文案简介" class="gs-input mb-4 gs-textarea" v-model="desc"/>
             <button class="my-2 gs-button gs-button-primary"
             @click="launchTextgenTask"
             >一键生成</button>
+            
+            <!-- TODO: 麻烦帮我fix一下样式！这个邀请码贴底不用填充满，旁边留个写联系信息的地方 谢谢~  -->
+            <div class="gs-caption">邀请码</div>
+            <input placeholder="请输入邀请码" class="gs-input mb-4" v-model="code"/>
         </div>
         <div class="root_right">
             <div class="logo_head px-4 pt-4">
