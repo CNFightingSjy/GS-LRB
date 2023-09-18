@@ -8,6 +8,7 @@ import { textgenTypes, textgenManners, textgenMannersMap, textgenTemplates } fro
 import { TextgenManner, TextgenRequirementDescriptor } from "@/types/textgen.ts";
 import { getSessionLevelToken, setSessionLevelToken } from "@/utils/token.ts";
 import Typewriter from "typewriter-effect/dist/core";
+import copy from 'copy-to-clipboard';
 
 // 控制动画的实例
 let typedAnimInstance = null;
@@ -165,7 +166,7 @@ function copyGeneratedText() {
             copyed = typeWriterWrapperDOM.innerHTML;
         }
     }
-    navigator.clipboard.writeText(copyed);
+    copy(copyed);
 }
 function fillTemplate(template) {
     const { title, brief, textType: textTypeObj, textManner: textMannerObj } = template;
