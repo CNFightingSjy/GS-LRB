@@ -157,7 +157,7 @@ const abortTextgenProcess = () => {
 }
 
 function copyGeneratedText() {
-    // TODO: copy dom's innerHTML
+    //  copy dom's innerHTML
     let copyed = '';
     if (typeWriterContentRef.value) {
         const typeWriterWrapperDOM = typeWriterContentRef.value.querySelector('.Typewriter__wrapper');
@@ -168,7 +168,6 @@ function copyGeneratedText() {
     navigator.clipboard.writeText(copyed);
 }
 function fillTemplate(template) {
-    // TODO: 模板填充
     const { title, brief, textType: textTypeObj, textManner: textMannerObj } = template;
     handleSelectTextgenManner(textgenManners.findIndex((item) => item.value === textMannerObj.value));
     selectedTextgenType.value = textTypeObj.value;
