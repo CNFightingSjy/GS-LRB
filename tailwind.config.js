@@ -6,7 +6,7 @@ module.exports = {
     "./src/*.{vue,js,ts,jsx,tsx}",
   ],
   presets: [],
-  darkMode: 'media', // or 'class'
+  darkMode: 'class', // or 'class'
 
   theme: {
     accentColor: ({ theme }) => ({
@@ -1010,7 +1010,7 @@ module.exports = {
 
   // daisyUI config (optional - here are the default values)
   daisyui: {
-    themes: false, // true: all themes | false: only light + dark | array: specific themes like this ["light", "dark", "cupcake"]
+    themes: ['light'], // true: all themes | false: only light + dark | array: specific themes like this ["light", "dark", "cupcake"]
     // themes: [
     //   {
     //     mytheme: {
