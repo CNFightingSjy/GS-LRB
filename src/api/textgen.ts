@@ -21,13 +21,15 @@ export type TextgenReponseStreamData = {
 };
 
 export function fetchTextgen({ title, brief, emotion, type, token }: TextgenDescriptor, { onOpen, onMessage, onClose, onError }: EventSourceCallbackDescriptor<TextgenReponseStreamData>) {
+    const ctrl = new AbortController();
     fetchEventSource(`${CGI_BASE_URL}/v1/api/chat`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-GsMatrix-Auth': token,
         },
-        body: JSON.stringify({ title, brief, emotion, type }),
+        body: JSON.stringify({ title, brief, emotion, type, token }),
+        signal: ctrl.signal,
         async onopen(response) {
             onOpen(response);
         },
@@ -51,4 +53,7 @@ export function fetchTextgen({ title, brief, emotion, type, token }: TextgenDesc
             onError(err);
         }
     });
+    return {
+        abort: ctrl.abort.bind(ctrl)
+    }
 }
