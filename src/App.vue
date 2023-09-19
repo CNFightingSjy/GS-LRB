@@ -121,7 +121,8 @@ const launchTextgenTask = debounce(() => {
     const { abort } = fetchTextgen({
         title: textgenRequirementDescriptor.value.title || '',
         brief: textgenRequirementDescriptor.value.brief || '',
-        emotion: textgenManners?.[selectedTextgenMannerIndex.value]?.value || '',
+        // emotion: textgenManners?.[selectedTextgenMannerIndex.value]?.value || '',
+        emotion: '好评', // FIXME: HARD—CODED
         type: selectedTextgenType.value || '',
         token: token || '',
     }, {
@@ -237,8 +238,8 @@ function closeMsgModal() {
             <div class="gs-caption">标题</div>
             <input placeholder="请输入标题" class="input input-bordered w-full" v-model="textgenRequirementDescriptor.title"/>
 
-            <div class="gs-caption mt-4">文案态度</div>
-            <GsMultiSwitch class="" :items="textgenManners" @change="handleSelectTextgenManner"/>
+<!--            <div class="gs-caption mt-4">文案态度</div>-->
+<!--            <GsMultiSwitch class="" :items="textgenManners" @change="handleSelectTextgenManner"/>-->
 
             <div class="gs-caption mt-4">文案类型</div>
             <select class="select select-bordered w-full" v-model="selectedTextgenType">
@@ -292,12 +293,13 @@ function closeMsgModal() {
                     @click="fillTemplate(template)"
                 >
                     <div class="template-option_title">{{ template.title }}</div>
-                    <div class="template-option_emotion">
-                        <div class="badge text-white border-none" :style="{
-                            backgroundColor: template.textManner.color
-                        }">{{ template.textManner.label }}</div>
-                    </div>
-                    <div class="template-option_desc">我的早C晚A护肤肤搭配肌肤修复肤搭配肌肤修复肤搭配肌肤修肤搭配肌肤修复肤搭配肌肤修复复搭配肌肤修复研究超过10年 独家科技离子技术 包含6大植物成分～</div>
+                    <!--    不显示文案态度                -->
+                    <!--                    <div class="template-option_emotion">-->
+                    <!--                        <div class="badge text-white border-none" :style="{-->
+                    <!--                            backgroundColor: template.textManner.color-->
+                    <!--                        }">{{ template.textManner.label }}</div>-->
+                    <!--                    </div>-->
+                    <div class="template-option_desc">{{ template.brief }}</div>
                 </div>
             </div>
             <footer class="gs-footer">
