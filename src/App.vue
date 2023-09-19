@@ -246,6 +246,7 @@ function closeMsgModal() {
 
         <div class="root_left p-4">
             <div class="flex flex-col border-b border-dashed border-slate-300 pb-4 mb-4 items-center">
+<!--                <img class="h-12 w-12 mb-2" src="/logo.svg"/>-->
                 <div class="font-serif font-bold text-xl pb-1 text-slate-800">小文案助手</div>
                 <div class="font-serif text-sm text-slate-400">由 GS-LLM 驱动</div>
             </div>

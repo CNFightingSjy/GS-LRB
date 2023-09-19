@@ -59,7 +59,7 @@ TGA认证：澳洲专业益生菌品牌
         title: '我的早C晚A护肤搭配～',
         textType: textgenTypesMap['素人真实分享'],
         textManner: textgenMannersMap[TextgenManner.Neutral],
-        brief: `GS肌底液
+        brief: `产品名称：GS肌底液
 KOL撰文指引
 产品主要卖点
 一句话卖点：修复肌肤，增强吸收，呈现透明度
