@@ -36,7 +36,8 @@ enum PageWorkflowStatus {
     Idle,
     Loading,
     Success,
-    Error,
+    TokenError,
+    ServerError
 }
 
 let workflowStatus = ref<PageWorkflowStatus>(PageWorkflowStatus.Idle);
@@ -76,6 +77,7 @@ function clearAll() {
 const consumerToken = ref('')
 const showValidConsumerTokenModal = ref(false);
 
+// @deprecated
 function validateConsumerToken() {
     if (!consumerToken.value) {
         // TODO: 提示
@@ -106,11 +108,13 @@ let currentTaskAbort = null;
 
 // debounce 500ms
 const launchTextgenTask = debounce(() => {
-    const token = getSessionLevelToken();
+    const token = /*getSessionLevelToken()*/consumerToken.value;
     if (!token) {
-        openModal();
+        // openModal();
+        workflowStatus.value = PageWorkflowStatus.TokenError;
         return;
     }
+    workflowStatus.value = PageWorkflowStatus.Idle;
     if (!textgenRequirementDescriptor.value.title) {
         showModalWithMsg('请输入标题');
         return;
@@ -124,10 +128,21 @@ const launchTextgenTask = debounce(() => {
         // emotion: textgenManners?.[selectedTextgenMannerIndex.value]?.value || '',
         emotion: '好评', // FIXME: HARD—CODED
         type: selectedTextgenType.value || '',
-        token: token || '',
+        token,
     }, {
-        onOpen: () => {
-            console.log('open');
+        onOpen: async (response: Response) => {
+            const { status } = response;
+            if (status === 500) {
+                const { code } = await response.json();
+                if (code === 10001) {
+                    workflowStatus.value = PageWorkflowStatus.TokenError;
+                }
+                else {
+                    showModalWithMsg('服务端错误，请重试');
+                    workflowStatus.value = PageWorkflowStatus.ServerError;
+                }
+                abort();
+            }
         },
         onError: (e) => {
             console.log('error', e);
@@ -212,22 +227,22 @@ function closeMsgModal() {
         </dialog>
 
         <!-- 填激活码的 modal -->
-        <dialog class="modal backdrop-blur-lg" :class="{
-                'modal-open': !!showValidConsumerTokenModal
-            }">
-            <div class="modal-box">
-                <h3 class="font-bold text-lg">输入邀请码，开启使用权限</h3>
-                <input placeholder="请输入邀请码" class="input input-bordered w-full mt-4" v-model="consumerToken"
-                       @keyup.enter="validateConsumerToken"
-                />
-                <div class="modal-action">
-                    <form method="dialog">
-                        <button class="btn btn-primary" @click="validateConsumerToken"
-                        >确认</button>
-                    </form>
-                </div>
-            </div>
-        </dialog>
+<!--        <dialog class="modal backdrop-blur-lg" :class="{-->
+<!--                'modal-open': !!showValidConsumerTokenModal-->
+<!--            }">-->
+<!--            <div class="modal-box">-->
+<!--                <h3 class="font-bold text-lg">输入邀请码，开启使用权限</h3>-->
+<!--                <input placeholder="请输入邀请码" class="input input-bordered w-full mt-4" v-model="consumerToken"-->
+<!--                       @keyup.enter="validateConsumerToken"-->
+<!--                />-->
+<!--                <div class="modal-action">-->
+<!--                    <form method="dialog">-->
+<!--                        <button class="btn btn-primary" @click="validateConsumerToken"-->
+<!--                        >确认</button>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </dialog>-->
 
         <div class="root_left p-4">
             <div class="flex flex-col border-b border-dashed border-slate-300 pb-4 mb-4 items-center">
@@ -253,6 +268,17 @@ function closeMsgModal() {
                     rows="4"
                     type="text" placeholder="请输入文案简介"
             />
+
+            <div class="gs-caption">邀请码</div>
+            <input
+                placeholder="请输入邀请码"
+                class="input input-bordered w-full"
+                :class="{
+                    'input-error': workflowStatus === PageWorkflowStatus.TokenError
+                }"
+                v-model="consumerToken"
+            />
+            <div v-if="workflowStatus === PageWorkflowStatus.TokenError" class="pt-1 text-sm text-red-500">请填写正确的邀请码</div>
 
             <div v-if="workflowStatus === PageWorkflowStatus.Loading" class="flex w-full gap-2 mt-4">
 <!--                <button class=" grow btn btn-error my-2" @click="abortTextgenProcess">-->
