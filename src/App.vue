@@ -149,12 +149,14 @@ const launchTextgenTask = debounce(() => {
         },
         onClose: () => {
             console.log('close');
-            workflowStatus.value = PageWorkflowStatus.Success;
         },
         onMessage: (msg: TextgenReponseStreamData) => {
             // @ts-ignore
             const { id, event, contentStream } = msg;
             if (contentStream.includes('[DONE]')) {
+                typedAnimInstance.callFunction((doms) => {
+                    workflowStatus.value = PageWorkflowStatus.Success;
+                })
                 return;
             }
             typedAnimInstance.typeString(contentStream).start();
